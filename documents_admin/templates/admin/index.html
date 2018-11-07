@@ -1,0 +1,19 @@
+{% extends 'admin/master.html' %}
+{% block body %}
+{{ super() }}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <h1>Documents admin</h1>
+            {% if current_user.is_authenticated %}
+            <p class="lead">
+                You are authenticated as {{ current_user.username }}
+            </p>
+            {% else %}
+                <a class="btn btn-primary" href="{{ url_for('security.login') }}">login</a>
+{#                <a class="btn btn-default" href="{{ url_for('security.register') }}">register</a>#}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock body %}
