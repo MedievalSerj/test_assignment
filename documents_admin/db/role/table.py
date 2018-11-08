@@ -6,7 +6,7 @@ role_table = sa.Table(
     'role',
     metadata,
     sa.Column('id', sa.Integer, primary_key=True),
-    sa.Column('name', sa.String(64), unique=True),
+    sa.Column('name', sa.String, unique=True),
     sa.Index('role_name_idx',
              'name')
 )

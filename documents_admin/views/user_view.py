@@ -4,6 +4,9 @@ from flask_security.utils import hash_password
 
 class UserView(BasicAdminView):
 
+    column_list = ('username', 'email', 'roles')
+    form_columns = ('roles', 'email', 'username', 'password', 'active')
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

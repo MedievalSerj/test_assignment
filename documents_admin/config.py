@@ -38,4 +38,3 @@ class DevelopmentConfig(Config):
     DEBUG = True
     PORT = getenv('PORT', 5000)
     REQUEST_LIFETIME = 0  # don't check against replay attacks
-    LOGLEVEL = logging.INFO

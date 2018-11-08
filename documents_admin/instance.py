@@ -40,13 +40,13 @@ def configure_app(app, config_obj):
         configure_from_default_config(app)
 
 
-def configure_logging(app):
-    """Logging configuration."""
-    logging.basicConfig(
-        level=app.config['LOGLEVEL'],
-        format='[%(levelname)s] %(asctime)s|%(name)s:%(lineno)d  %(message)s',
-        datefmt='%Y%m%d-%H:%M%p'
-    )
+# def configure_logging(app):
+#     """Logging configuration."""
+#     logging.basicConfig(
+#         level=app.config['LOGLEVEL'],
+#         format='[%(levelname)s] %(asctime)s|%(name)s:%(lineno)d  %(message)s',
+#         datefmt='%Y%m%d-%H:%M%p'
+#     )
 
 
 def get_db_session(app):
@@ -57,7 +57,7 @@ def create_app(app_name='documents_admin', config_obj=None):
     """App factory."""
     app = App(app_name, template_folder='templates', static_folder='static')
     configure_app(app, config_obj=config_obj)
-    configure_logging(app)
+    # configure_logging(app)
     app.set_db_session(get_db_session(app))
     return app
 
