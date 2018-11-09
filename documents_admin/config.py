@@ -1,5 +1,5 @@
-from os import getenv
 import logging
+from os import getenv
 
 
 class Config(object):
@@ -13,6 +13,9 @@ class Config(object):
     LOGLEVEL = logging.ERROR
     DB_URL = 'sqlite:///documents.sqlite'
 
+    # in seconds
+    TIME_USER_CAN_EDIT = 3600
+
     # security configuration
     # Flask-Security config
     SECURITY_URL_PREFIX = "/"
@@ -22,14 +25,12 @@ class Config(object):
     # Flask-Security URLs, overridden because they don't put a / at the end
     SECURITY_LOGIN_URL = "/login/"
     SECURITY_LOGOUT_URL = "/logout/"
-    # SECURITY_REGISTER_URL = "/register/"
 
-    SECURITY_POST_LOGIN_VIEW = "/document/"
+    SECURITY_POST_LOGIN_VIEW = "/"
     SECURITY_POST_LOGOUT_VIEW = "/"
-    SECURITY_POST_REGISTER_VIEW = "/document/"
 
     # Flask-Security features
-    SECURITY_REGISTERABLE = True
+    SECURITY_REGISTERABLE = False
     SECURITY_SEND_REGISTER_EMAIL = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

@@ -1,7 +1,8 @@
-from ..core import Base
-from .table import role_table
 from sqlalchemy.orm import relationship
+
+from ..core import Base
 from ..user_role_info import user_role_info_table
+from .table import role_table
 
 
 class Role(Base):

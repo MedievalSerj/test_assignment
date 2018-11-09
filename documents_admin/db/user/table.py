@@ -1,6 +1,6 @@
 import sqlalchemy as sa
-from ..core import metadata
 
+from ..core import metadata
 
 user_table = sa.Table(
     'user',

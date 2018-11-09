@@ -1,0 +1,13 @@
+version: "3.3"
+
+services:
+  rabbitmq:
+    image: rabbitmq:alpine
+    ports:
+      - 5672:5672
+    volumes:
+      - rabbitmq_data:/opt/rabbitmq:rw
+
+volumes:
+  rabbitmq_data:
+    driver: local

@@ -1,4 +1,4 @@
-from .user import User
-from .source import Source
-from .role import Role
 from .document import Document
+from .role import Role
+from .source import Source
+from .user import User

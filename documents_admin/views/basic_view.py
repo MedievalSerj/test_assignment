@@ -1,6 +1,6 @@
+from flask import abort, redirect, request, url_for
 from flask_admin.contrib.sqla import ModelView
 from flask_security import current_user
-from flask import abort, request, redirect, url_for
 
 
 class BasicAdminView(ModelView):

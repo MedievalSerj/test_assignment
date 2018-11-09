@@ -1,28 +1,14 @@
-from flask_script import Manager
-from documents_admin.instance import app
-from documents_admin.db.migrations.db import run_alembic
-from documents_admin.db.models import Role, User, Source
-from documents_admin.instance import user_datastore
-from flask_security.utils import encrypt_password
 import os
-import glob
 import uuid
 
+from flask_script import Manager
+from flask_security.utils import encrypt_password
+
+from documents_admin.db.migrations.db import run_alembic
+from documents_admin.db.models import Role, Source, User
+from documents_admin.instance import app, user_datastore
 
 manager = Manager(app)
-DB_URL = 'sqlite:///documents.sqlite'
-
-
-@manager.command
-def clean_all():
-    """
-    delete db and migrations
-    """
-    filelist = glob.glob(os.path.join(
-        'documents_admin/db/migrations/versions', "*.py"))
-    for f in filelist:
-        os.remove(f)
-    os.remove('documents.sqlite')
 
 
 @manager.command
@@ -39,32 +25,29 @@ def create_roles():
     session.close()
 
 
-@manager.command
-def create_all():
-    run_alembic(DB_URL, 'migrate', 'initial')
-    run_alembic(DB_URL, 'upgrade', 'head')
-    create_roles()
-
-
-@manager.command
-def create_all_dev():
-    run_alembic(DB_URL, 'migrate', 'initial')
-    run_alembic(DB_URL, 'upgrade', 'head')
-    create_roles()
+def _create_default_user():
     session = app.db_session
     admin_role = session.query(Role).filter(Role.name == 'admin').first()
     admin_user = User(active=1,
-                      roles=[admin_role,],
-                      email='ladonya.s@gmail.com',
-                      username='serj',
-                      password=encrypt_password('123'))
+                      roles=[admin_role, ],
+                      email='admin',
+                      username='admin',
+                      password=encrypt_password('admin'))
     source = Source(sid=str(uuid.uuid1()),
                     name='default source',
-                    url='www.be-be-be-me-me-me-fur-fur-fur')
+                    url='www.example.com')
     session.add(admin_user)
     session.add(source)
     session.commit()
     session.close()
+
+
+@manager.command
+def create_all():
+    """Run migrations, create roles, add default user"""
+    run_alembic(app.config['DB_URL'], 'upgrade', 'head')
+    create_roles()
+    _create_default_user()
 
 
 @manager.command
@@ -79,7 +62,7 @@ def create_admin():
     for key in fields.keys():
         fields[key] = input(f'enter {key}: ')
     fields['password'] = encrypt_password(fields['password'])
-    admin_role = session.query(Role).filter(Role.name=='admin').first()
+    admin_role = session.query(Role).filter(Role.name == 'admin').first()
     admin_user = user_datastore.create_user(active=1, roles=[admin_role, ], **fields)
     app.db_session.add(admin_user)
     app.db_session.commit()
@@ -91,7 +74,7 @@ def migrate(message):
     """Usage:
     python manage.py migrate -m initial
     """
-    run_alembic(DB_URL, 'migrate', message)
+    run_alembic(app.config['DB_URL'], 'migrate', message)
 
 
 @manager.option('-r', '--revision', dest='revision', default='head',
@@ -100,7 +83,7 @@ def upgrade(revision):
     """Usage:
     python manage.py upgrade -r head
     """
-    run_alembic(DB_URL, 'upgrade', revision)
+    run_alembic(app.config['DB_URL'], 'upgrade', revision)
 
 
 @manager.option('-r', '--revision', dest='revision', required=True,
@@ -109,7 +92,15 @@ def downgrade(revision):
     """Usage:
     python manage.py downgrade -r cc537ef09e40
     """
-    run_alembic(DB_URL, 'upgrade', revision)
+    run_alembic(app.config['DB_URL'], 'upgrade', revision)
+
+
+@manager.command
+def clean_all():
+    """
+    delete db
+    """
+    os.remove('documents.sqlite')
 
 
 if __name__ == '__main__':

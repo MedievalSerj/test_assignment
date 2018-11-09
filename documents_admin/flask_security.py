@@ -1,8 +1,5 @@
 from flask_security.datastore import Datastore, UserDatastore
 from flask_security.utils import get_identity_attributes
-from flask_security.forms import RegisterForm
-from wtforms import StringField
-from wtforms.validators import Required
 
 
 class SQLAlchemyDatastore(Datastore):
@@ -58,7 +55,3 @@ class SQLAlchemyUserDatastore(SQLAlchemyDatastore, UserDatastore):
                     .query(self.role_model)
                     .filter_by(name=role)
                     .first())
-
-
-class ExtendedRegisterForm(RegisterForm):
-    username = StringField('Username', [Required()])

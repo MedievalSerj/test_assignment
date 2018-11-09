@@ -1,13 +1,14 @@
-import logging
 import os
-from .admin import init_admin
-from .db.models import User, Role
 
 from flask import Flask, url_for
-from documents_admin.utils.db import get_scoped_session
 from flask_admin import helpers as admin_helpers
 from flask_security import Security
-from .flask_security import SQLAlchemyUserDatastore, ExtendedRegisterForm
+
+from documents_admin.utils.db import get_scoped_session
+
+from .admin import init_admin
+from .db.models import Role, User
+from .flask_security import SQLAlchemyUserDatastore
 
 
 class App(Flask):
@@ -40,15 +41,6 @@ def configure_app(app, config_obj):
         configure_from_default_config(app)
 
 
-# def configure_logging(app):
-#     """Logging configuration."""
-#     logging.basicConfig(
-#         level=app.config['LOGLEVEL'],
-#         format='[%(levelname)s] %(asctime)s|%(name)s:%(lineno)d  %(message)s',
-#         datefmt='%Y%m%d-%H:%M%p'
-#     )
-
-
 def get_db_session(app):
     return get_scoped_session(app.config['DB_URL'])
 
@@ -65,7 +57,6 @@ def create_app(app_name='documents_admin', config_obj=None):
 app = create_app()
 user_datastore = SQLAlchemyUserDatastore(app.db_session, User, Role)
 security = Security(app, user_datastore)
-                    # register_form=ExtendedRegisterForm)
 admin = init_admin(app)
 
 

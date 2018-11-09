@@ -1,7 +1,8 @@
-import sqlalchemy as sa
-from ..core import metadata
 import uuid
 
+import sqlalchemy as sa
+
+from ..core import metadata
 
 source_table = sa.Table(
     'source',

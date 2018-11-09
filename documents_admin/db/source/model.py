@@ -1,6 +1,7 @@
+from sqlalchemy.orm import relationship
+
 from ..core import Base
 from .table import source_table
-from sqlalchemy.orm import relationship
 
 
 class Source(Base):
